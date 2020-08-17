@@ -1,0 +1,13 @@
+entity Product {
+   name String required
+   price Long
+}
+entity Sales {
+    state State required
+}
+enum State {
+    IN_CHARGE, SHIPPED, DELIVERED
+}
+relationship ManyToOne {
+    Sales{product} to Product
+}

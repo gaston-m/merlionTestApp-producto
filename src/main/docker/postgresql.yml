@@ -1,0 +1,12 @@
+version: '2'
+services:
+  merliontestapp-postgresql:
+    image: postgres:12.3
+    # volumes:
+    #     - ~/volumes/jhipster/merlionTestApp/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=merlionTestApp
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432
