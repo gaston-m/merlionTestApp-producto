@@ -310,3 +310,41 @@ http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+
+.container .button-selected {
+  background-color: #2a6a9e;
+  color: white;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem;
+
+  button {
+    color: #2a6a9e;
+    border: solid 1px #2a6a9e !important;
+  }
+
+  button:hover {
+    background-color: #2a6a9e;
+    color: white;
+  }
+}
+
+.container .selected {
+  background-color: #2a6a9e;
+  color: white;
+}
+
+body {
+  min-height: 110vh;
+}
+
+@media only screen and (max-width: 400px) {
+  .container {
+    button {
+      font-size: 0.7rem;
+    }
+  }
+}

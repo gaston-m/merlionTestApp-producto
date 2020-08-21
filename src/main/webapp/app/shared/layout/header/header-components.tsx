@@ -15,9 +15,10 @@ export const BrandIcon = props => (
 
 export const Brand = props => (
   <NavbarBrand tag={Link} to="/" className="brand-logo">
-    <BrandIcon />
+    <img className='img-logo' src="https://www.merliontechs.com/wp-content/uploads/2020/04/cropped-logo-blanco-png.png" alt="Logo Company"/>
+  {/*  <BrandIcon /> */}
     <span className="brand-title">
-      <Translate contentKey="global.title">MerlionTestApp</Translate>
+      Merlion App Sales
     </span>
     <span className="navbar-version">{appConfig.VERSION}</span>
   </NavbarBrand>
