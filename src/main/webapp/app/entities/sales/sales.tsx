@@ -16,13 +16,20 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ButtonGroup } from '@material-ui/core';
 import MaterialButton from '@material-ui/core/Button';
 import { createMuiTheme,MuiThemeProvider } from '@material-ui/core/styles';
-import { green, purple } from '@material-ui/core/colors';
+
+import { Color } from '@material-ui/lab/Alert/Alert'
+import { Alert } from '@material-ui/lab'
 
 export interface ISalesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Sales = (props: ISalesProps) => {
-  const { salesList, match, loading } = props;
 
+  const successAlert : Color = ('success');
+  const errorAlert : Color = ('error')
+
+  const [ alert, setAlert ] = useState({ state: '', status: false, message: ''})
+
+  const { salesList, match, loading } = props;
   const [ currentSalesList, setCurrentSalesList ] = useState([])
   const [ typeSales, setTypeSales ] = useState('IN_CHARGE')
 
@@ -40,6 +47,16 @@ export const Sales = (props: ISalesProps) => {
   }
 
   useEffect(()=>{
+    if(alert.state) {
+        setTimeout(
+            () => {setAlert({ state: '', status: false, message: ''})
+          },
+            3000
+        )
+    }
+}, [ alert ])
+
+  useEffect(()=>{
     filterSales()
     if(typeSales) {
       const btns = document.querySelectorAll('.btn-ui')
@@ -52,20 +69,40 @@ export const Sales = (props: ISalesProps) => {
 
   // Event handlers
 
-  const updateState = async sale => {
+  const updateState = async (sale, type) => {
     try {
-      const newState = typeSales === 'IN_CHARGE' ? 'SHIPPED' : typeSales === 'SHIPPED' ? 'DELIVERED': 'IN_CHARGE'
-      const newSale = {
-        ...sale,
-        state: newState
+      let newSale 
+      if(type === 'up') {
+        const newState = typeSales === 'IN_CHARGE' ? 'SHIPPED' : typeSales === 'SHIPPED' ? 'DELIVERED': 'IN_CHARGE'
+        newSale = {
+          ...sale,
+          state: newState
+        }
+
+      } else {
+          const newState = typeSales === 'SHIPPED' ? 'IN_CHARGE': 'SHIPPED'
+          newSale = {
+            ...sale,
+            state: newState
+          }
       }
 
      const response = await api('PUT', 'sales', {}, newSale)
       if(response) {
         props.getEntities()
+        setAlert({
+          state: 'success',
+          status: true,
+          message: 'Envio exitoso!'
+        })
       }
     }
     catch(error) {
+      setAlert({
+        state: 'error',
+        status: true,
+        message: 'Ups, no se pudo enviar la venta'
+      })
      // console.log(error)
     }
   }
@@ -106,6 +143,12 @@ export const Sales = (props: ISalesProps) => {
 
   return (
     <div>
+      {
+        alert.status ? 
+          <Alert className='alert-submit' severity={ alert.state === 'error'? errorAlert : successAlert } >{ alert.message }</Alert>
+        :
+          null
+      }
       <h2 id="sales-heading">
          Ventas
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
@@ -117,7 +160,7 @@ export const Sales = (props: ISalesProps) => {
       <ButtonGroup className='container' size="large" color="primary" aria-label="large button group">
         <MaterialButton id='IN_CHARGE' className='btn-ui'
           onClick={ ()=>{ _handleChangeTypeSales('IN_CHARGE') } }>
-            EN CARGA
+            ENCARGADO
         </MaterialButton>
         <MaterialButton id='SHIPPED' className='btn-ui'
           onClick={ ()=>{ _handleChangeTypeSales('SHIPPED') } }>
@@ -157,13 +200,13 @@ export const Sales = (props: ISalesProps) => {
                     </Button>
                   </td>
                   <td>
-                    { sales.state === 'IN_CHARGE' ? 'EN CARGA' : sales.state === 'SHIPPED' ? 'ENVIADO' : 'ENTREGADO' } 
+                    { sales.state === 'IN_CHARGE' ? 'ENCARGADO' : sales.state === 'SHIPPED' ? 'ENVIADO' : 'ENTREGADO' } 
                   </td>
                   <td>{sales.product ? <Link to={`product/${sales.product.id}`}>{sales.product.name}</Link> : ''}</td>
                   <td className="text-center">
                     <div className="btn-group flex-btn-group-container">
                       <Button 
-                        onClick={()=>{updateState(sales)}} 
+                        onClick={()=>{updateState(sales, 'up')}} 
                         variant='contained' 
                         color={typeSales === 'DELIVERED' ? 'secondary' : 'primary'} 
                         size="sm" 
@@ -175,12 +218,12 @@ export const Sales = (props: ISalesProps) => {
                       {
                         sales.state !== 'IN_CHARGE' ?
                           <Button 
-                            onClick={()=>{returnState(sales)}} 
+                            onClick={()=>{updateState(sales, 'down')}} 
                             color='warning'
                             size="sm"
                             className='ml-1' >
                             <span className="d-none d-md-inline">
-                            Volver a { typeSales === 'SHIPPED'? '"EN CARGA"' : '"ENVIADO"' }
+                            Devolver a { typeSales === 'SHIPPED'? '"ENCARGADO"' : '"ENVIADO"' }
                             </span>
                           </Button>
                         :

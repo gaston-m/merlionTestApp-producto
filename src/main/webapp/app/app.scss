@@ -348,3 +348,10 @@ body {
     }
   }
 }
+
+.alert-submit {
+  position: fixed !important;
+  z-index: 99999999 !important;
+  margin: -2rem 40% 0 32% !important;
+  width: 30%;
+}
