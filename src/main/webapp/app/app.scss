@@ -29,6 +29,7 @@ a {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem;
+    min-height: 83.5vh;
     .card {
       padding: 1rem;
     }
@@ -335,10 +336,6 @@ http://stackoverflow.com/questions/23436430/bootstrap-3-input-group-100-width */
 .container .selected {
   background-color: #2a6a9e;
   color: white;
-}
-
-body {
-  min-height: 110vh;
 }
 
 @media only screen and (max-width: 400px) {

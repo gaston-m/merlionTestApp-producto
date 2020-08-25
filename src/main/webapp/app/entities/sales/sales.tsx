@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { api } from '../../shared/util/axios.config'
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -103,23 +103,6 @@ export const Sales = (props: ISalesProps) => {
         status: true,
         message: 'Ups, no se pudo enviar la venta'
       })
-     // console.log(error)
-    }
-  }
-
-  const returnState = async sale => {
-    try {
-      const newState = typeSales === 'SHIPPED' ? 'IN_CHARGE': 'SHIPPED'
-      const newSale = {
-        ...sale,
-        state: newState
-      }
-      const response = await api('PUT', 'sales', {}, newSale)
-      if(response) {
-        props.getEntities()
-      }
-    }
-    catch(error) {
      // console.log(error)
     }
   }
